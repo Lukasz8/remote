@@ -1,30 +1,54 @@
 /*
- 
- SP8XCE & SQ9MDD
-
+SP8XCE & SQ9MDD
+REMOTE 
 */
+//odbior, potwierdzenie odbioru + obsluga dekodera BCD
+#include <SPI.h>
+#include <RF22.h>
+//#include <RF22Datagram.h>
+//#include <RF22Mesh.h>
+//#include <RF22ReliableDatagram.h>
+//#include <RF22Router.h>
 
-//tablice kolejności i zwłok czasowych
-int tablica[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-int interwa[16] = {1000,1000,3000,1000,500,1000,100,100,1000,1000,3000,1000,500,1000,100,10};
+//inicjalizacja
+RF22 rf22;
 
-int reczne_odpalenie = 3;
-
-//podlaczenie BCD do arduino i kabelkologia
+//zmienne
+int TX = 7399;
+int RX;
 int bcd_E1 = 5;
 int bcd_A0 = 6;
 int bcd_A1 = 7;
 int bcd_A2 = 8;
 int bcd_A3 = 9;
-int play_button = 3;
-int reczny_button = 4;
 
-//zmienne pomcnicze
-int flaga  = 0;
-int start_pgm = 0;
-
-//**************************************************************************************************//
 //funkcje
+void send_data(){
+  //TX
+  rf22.send((uint8_t*)&TX, sizeof(TX));
+  rf22.waitPacketSent();
+  //RX
+  uint8_t buf[RF22_MAX_MESSAGE_LEN];
+  uint8_t len = sizeof(buf);
+  if (rf22.waitAvailableTimeout(500))
+  { 
+  if (rf22.recv(buf, &len))
+      {
+      RX = (int&)buf;
+   Serial.print("mamy odpowiedz: ");
+   Serial.print(RX);
+      }
+      else
+      {
+        Serial.println("blad obierania");
+      }
+   }
+    else
+    {
+     Serial.println("brak sygnalow");
+    }
+}
+
 void odpalanie_wyjscia(int wejscie){
   //sterowanie BCD
   switch(wejscie){
@@ -144,61 +168,34 @@ void odpalanie_wyjscia(int wejscie){
 }
 
 
-//funkcja odtwarzania pokazu
-void play_show(){
-  if(flaga == 0){
-    Serial.println("Start Pokazu");
-    for(int licznik = 0; licznik < 16; licznik++){
-       Serial.print(tablica[licznik]);
-       Serial.print(";");
-       Serial.println(interwa[licznik]); 
-       
-       //wywolanie procedury odpalenia odpowiedniego wyjscia
-       odpalanie_wyjscia(tablica[licznik]);
-       delay(interwa[licznik]);
-    } 
-   flaga = 1; 
-   Serial.println("Koniec Pokazu");
-  } 
-}
-
-//**************************************************************************************************//
-//funkcja odpalana przy starcie
+//startup sequence
 void setup(){
-  Serial.begin(9600); 
-  pinMode(play_button,INPUT_PULLUP);
-  pinMode(reczny_button,INPUT_PULLUP);
+  Serial.begin(9600);
+  
   pinMode(bcd_E1,OUTPUT);  
   pinMode(bcd_A0,OUTPUT);
   pinMode(bcd_A1,OUTPUT);
   pinMode(bcd_A2,OUTPUT);
   pinMode(bcd_A3,OUTPUT);
-  
   digitalWrite(bcd_E1,LOW);
   digitalWrite(bcd_A0,LOW);
   digitalWrite(bcd_A1,LOW);
   digitalWrite(bcd_A2,LOW);
   digitalWrite(bcd_A3,LOW);
   
-  delay(3000); 
-  Serial.println("GOTOWY");
-  delay(1000);
+  if (!rf22.init()){
+    Serial.println("RF22 init failed");
+  }
+  rf22.setFrequency(434.50);
+  rf22.setTxPower(RF22_TXPOW_17DBM);  
+  Serial.print("startup");
 }
 
-//**************************************************************************************************//
-//petla główna 
+//infinity loop
 void loop(){
-  int stan_przycisku = digitalRead(play_button);
-  if (stan_przycisku == LOW){
-    play_show();  
-  }
-  int stan_reczny_button = digitalRead(reczny_button);
-  if(stan_reczny_button == LOW){
-    odpalanie_wyjscia(reczne_odpalenie);
-  }
-  
+  //tutaj wysylka danych przez radio
+  send_data();
+  Serial.print(" infinity ");
+  //ulatwia synchronizowanie odbiornika po zaniku sygnalu
+  delay(100); 
 }
-
-//**************************************************************************************************//
-
-//EOF
