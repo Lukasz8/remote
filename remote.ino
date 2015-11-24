@@ -2,7 +2,7 @@
 SP8XCE & SQ9MDD
 REMOTE 
 */
-//odbior, potwierdzenie odbioru + obsluga dekodera BCD
+//odbior, potwierdzenie odbioru + obsluga dekodera BCD 5 pinow
 #include <SPI.h>
 #include <RF22.h>
 //#include <RF22Datagram.h>
