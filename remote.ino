@@ -45,10 +45,20 @@ void rcv_data(){
         int polecenie = reszta % 10; 
           //jak już mam adres wyjscia to moge nimi sterowac
           switch(adres_wyjscia){
-            case 1:
-            Serial.println("sprawdzenie czy odbiornik zyje");
+            case 10: // sprawdzenie czy zyje odbiornik
+              Serial.println("sprawdzenie czy odbiornik zyje");
             break;
-            
+            case 11:
+              Serial.println("odpalenie wyjscia 1"); 
+              if(polecenie == 1){
+                 Serial.println("ON");
+              }else{
+                 Serial.println("OF");
+              }
+            break;
+            case 12:
+              Serial.println("odpalenie wyjscia 2");
+            break;
           }
         
       }
