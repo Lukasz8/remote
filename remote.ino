@@ -5,11 +5,10 @@ REMOTE odbior, potwierdzenie odbioru + obsluga dekodera BCD 5 pinow
 CHANGELOG
  2015.11.26 - dodanie konfiguracji adresu (programowo), dodanie reakcji na adres
 */
-<<<<<<< HEAD
-//odbior, potwierdzenie odbioru + obsluga dekodera BCD
-=======
 
->>>>>>> origin/master
+//odbior, potwierdzenie odbioru + obsluga dekodera BCD
+
+
 #include <SPI.h>
 #include <RF22.h>
 
@@ -46,7 +45,7 @@ void rcv_data(){
         int polecenie = reszta % 10; 
           //jak już mam adres wyjscia to moge nimi sterowac
           switch(adres_wyjscia){
-            case 10:
+            case 1:
             Serial.println("sprawdzenie czy odbiornik zyje");
             break;
             
@@ -70,6 +69,7 @@ void odpalanie_wyjscia(int wejscie){
         digitalWrite(bcd_A1,LOW);
         digitalWrite(bcd_A2,LOW);
         digitalWrite(bcd_A3,LOW);
+        Serial.print("wyrzutnia 1");
      break;
      case 2:
         digitalWrite(bcd_E1,HIGH);
@@ -179,7 +179,6 @@ void odpalanie_wyjscia(int wejscie){
   }
 }
 
-
 //startup sequence
 void setup(){
   Serial.begin(9600);
@@ -206,6 +205,11 @@ void setup(){
 //infinity loop
 void loop(){
   //tutaj wysylka danych przez radio
+  
+  //tutaj potrzeba dac funkcje sumy zmiennych; adres_wyjscia i polecenie = 1 to w efekcie mamy odpalenie wlasciwego wyjscia
+  odpalanie_wyjscia(3);
+  //oraz ta sama cyfra jest wysylana jako zmienna TX w roli potwierdzenia np (adres wy) 1103 
+  
   rcv_data();
   //Serial.print(" infinity ");
   //ulatwia synchronizowanie odbiornika po zaniku sygnalu
