@@ -52,38 +52,29 @@ void rcv_data(){
             break;
             case 11:
               if(polecenie == 1){
-              Serial.println("odpalenie wyjscia 1"); 
-              digitalWrite(bcd_E1,HIGH);
-              digitalWrite(bcd_A0,LOW);
-              digitalWrite(bcd_A1,LOW);
-              digitalWrite(bcd_A2,LOW);
-              digitalWrite(bcd_A3,LOW);
-              }break;
+                Serial.println("odpalenie wyjscia 1"); 
+                odpalanie_wyjscia(1);
+              }
+            break;
             case 12:
               if(polecenie == 1){
-              Serial.println("odpalenie wyjscia 2");
-              digitalWrite(bcd_E1,HIGH);
-              digitalWrite(bcd_A0,HIGH);
-              digitalWrite(bcd_A1,LOW);
-              digitalWrite(bcd_A2,LOW);
-              digitalWrite(bcd_A3,LOW);
-              }break;
+                Serial.println("odpalenie wyjscia 2");
+                odpalanie_wyjscia(2);
+              }
+            break;
             case 13:
               if(polecenie == 1){
-              Serial.println("odpalenie wyjscia 3");
-              digitalWrite(bcd_E1,HIGH);
-              digitalWrite(bcd_A0,LOW);
-              digitalWrite(bcd_A1,HIGH);
-              digitalWrite(bcd_A2,LOW);
-              digitalWrite(bcd_A3,LOW);
-              }break; 
+                Serial.println("odpalenie wyjscia 3");
+                odpalanie_wyjscia(3);
+              }
+            break; 
           }
         
       }
 
       //debugowanie printujemy wszystko co odbieramy
       Serial.print("mamy odpowiedz: ");
-      Serial.print(RX);
+      Serial.println(RX);
       }
    }
 }
