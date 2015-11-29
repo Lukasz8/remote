@@ -3,12 +3,13 @@ SP8XCE & SQ9MDD
 REMOTE odbior, potwierdzenie odbioru + obsluga dekodera BCD 5 pinow
 
 CHANGELOG nowe na górze
+ 2015.11.29 - SQ9MDD v.1.4 dodanie funkcji do obsługi dipswitch adresy
  2015.11.29 - SQ9MDD dodałem gaszenie wyjść 5sec po ostatnim wysterowaniu
  2015.11.29 - uruchomienie sterowania diodami podpietymi do wyjscia dekodera BCD  
  2015.11.26 - dodanie konfiguracji adresu (programowo), dodanie reakcji na adres
 
 */
-#define ver 1.3
+#define ver 1.4
 
 #include <SPI.h>
 #include <RF22.h>
@@ -17,7 +18,8 @@ CHANGELOG nowe na górze
 RF22 rf22;
 
 //zmienne
-int net_addr = 11;
+int net_addr = 0;
+int wejscie_pomiarowe_adresu = A0;
 unsigned long time_to_gaszenie = 0;   //pomocnicza do wygaszania wejść
 int bcd_E1 = 5;
 int bcd_A0 = 6;
@@ -26,6 +28,32 @@ int bcd_A2 = 8;
 int bcd_A3 = 9;
 
 //funkcje
+
+//ustawienie adresu
+int set_addres(){
+  int addres = 0;
+  int pomiar = analogRead(wejscie_pomiarowe_adresu);
+  //Serial.println(pomiar); //odkomentuj do kalibracji
+  if(pomiar <= 5) addres = 0;
+  if(pomiar >= 10 && pomiar <= 30) addres = 1; 
+  if(pomiar >= 30 && pomiar <= 46) addres = 2; 
+  if(pomiar >= 47 && pomiar <= 66) addres = 3;
+  if(pomiar >= 67 && pomiar <= 88) addres = 4; 
+  if(pomiar >= 87 && pomiar <= 105) addres = 5; 
+  if(pomiar >= 106 && pomiar <= 115) addres = 6; 
+  if(pomiar >= 116 && pomiar <= 131) addres = 7; 
+  if(pomiar >= 132 && pomiar <= 150) addres = 8; 
+  if(pomiar >= 151 && pomiar <= 160) addres = 9; 
+  if(pomiar >= 161 && pomiar <= 175) addres = 10; 
+  if(pomiar >= 176 && pomiar <= 190) addres = 11; 
+  if(pomiar >= 191 && pomiar <= 205) addres = 12; 
+  if(pomiar >= 206 && pomiar <= 220) addres = 13; 
+  if(pomiar >= 221 && pomiar <= 230) addres = 14; 
+  if(pomiar >= 231 && pomiar <= 241) addres = 15; 
+  return(addres+10); 
+}
+
+//odbieranie danych
 void rcv_data(){
   //TX
   //rf22.send((uint8_t*)&TX, sizeof(TX));
@@ -292,7 +320,7 @@ void gaszenie_wyjsc(){
 //startup sequence
 void setup(){
   Serial.begin(9600);
-  
+  net_addr = set_addres();
   pinMode(bcd_E1,OUTPUT);  
   pinMode(bcd_A0,OUTPUT);
   pinMode(bcd_A1,OUTPUT);
@@ -314,8 +342,10 @@ void setup(){
 
 //infinity loop
 void loop(){
+  //aby skalibrować drabinke z adresem odkomentuj i czytaj wartości
+  net_addr = set_addres();
+  
   //tutaj wysylka danych przez radio
-
   rcv_data();
   gaszenie_wyjsc();
   //Serial.print(" infinity ");
