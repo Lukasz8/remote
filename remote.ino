@@ -68,13 +68,90 @@ void rcv_data(){
                 odpalanie_wyjscia(3);
               }
             break; 
+            case 14:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 4");
+                odpalanie_wyjscia(4);
+              }
+            break; 
+            case 15:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 5");
+                odpalanie_wyjscia(5);
+              }
+            break; 
+            case 16:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 6");
+                odpalanie_wyjscia(6);
+              }
+            break; 
+            case 17:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 7");
+                odpalanie_wyjscia(7);
+              }
+            break; 
+            case 18:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 8");
+                odpalanie_wyjscia(8);
+              }
+            break; 
+            case 19:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 9");
+                odpalanie_wyjscia(9);
+              }
+            break; 
+            case 20:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 10");
+                odpalanie_wyjscia(10);
+              }
+            break; 
+            case 21:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 11");
+                odpalanie_wyjscia(11);
+              }
+            break; 
+            case 22:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 12");
+                odpalanie_wyjscia(12);
+              }
+            break; 
+            case 23:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 13");
+                odpalanie_wyjscia(13);
+              }
+            break; 
+            case 24:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 14");
+                odpalanie_wyjscia(14);
+              }
+            break; 
+            case 25:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 15");
+                odpalanie_wyjscia(15);
+              }
+            break; 
+            case 26:
+              if(polecenie == 1){
+                Serial.println("odpalenie wyjscia 16");
+                odpalanie_wyjscia(16);
+              }
+            break;
           }
         
-      }
-
       //debugowanie printujemy wszystko co odbieramy
       Serial.print("mamy odpowiedz: ");
       Serial.println(RX);
+      }
       }
    }
 }
