@@ -4,10 +4,8 @@ REMOTE odbior, potwierdzenie odbioru + obsluga dekodera BCD 5 pinow
 
 CHANGELOG
  2015.11.26 - dodanie konfiguracji adresu (programowo), dodanie reakcji na adres
+ 2015.11.29 - uruchomienie sterowania diodami podpietymi do wyjscia dekodera BCD
 */
-
-//odbior, potwierdzenie odbioru + obsluga dekodera BCD
-
 
 #include <SPI.h>
 #include <RF22.h>
@@ -49,16 +47,32 @@ void rcv_data(){
               Serial.println("sprawdzenie czy odbiornik zyje");
             break;
             case 11:
-              Serial.println("odpalenie wyjscia 1"); 
               if(polecenie == 1){
-                 Serial.println("ON");
-              }else{
-                 Serial.println("OF");
-              }
-            break;
+              Serial.println("odpalenie wyjscia 1"); 
+              digitalWrite(bcd_E1,HIGH);
+              digitalWrite(bcd_A0,LOW);
+              digitalWrite(bcd_A1,LOW);
+              digitalWrite(bcd_A2,LOW);
+              digitalWrite(bcd_A3,LOW);
+              }break;
             case 12:
+              if(polecenie == 1){
               Serial.println("odpalenie wyjscia 2");
-            break;
+              digitalWrite(bcd_E1,HIGH);
+              digitalWrite(bcd_A0,HIGH);
+              digitalWrite(bcd_A1,LOW);
+              digitalWrite(bcd_A2,LOW);
+              digitalWrite(bcd_A3,LOW);
+              }break;
+            case 13:
+              if(polecenie == 1){
+              Serial.println("odpalenie wyjscia 3");
+              digitalWrite(bcd_E1,HIGH);
+              digitalWrite(bcd_A0,LOW);
+              digitalWrite(bcd_A1,HIGH);
+              digitalWrite(bcd_A2,LOW);
+              digitalWrite(bcd_A3,LOW);
+              }break; 
           }
         
       }
@@ -79,7 +93,6 @@ void odpalanie_wyjscia(int wejscie){
         digitalWrite(bcd_A1,LOW);
         digitalWrite(bcd_A2,LOW);
         digitalWrite(bcd_A3,LOW);
-        Serial.print("wyrzutnia 1");
      break;
      case 2:
         digitalWrite(bcd_E1,HIGH);
@@ -215,11 +228,7 @@ void setup(){
 //infinity loop
 void loop(){
   //tutaj wysylka danych przez radio
-  
-  //tutaj potrzeba dac funkcje sumy zmiennych; adres_wyjscia i polecenie = 1 to w efekcie mamy odpalenie wlasciwego wyjscia
-  odpalanie_wyjscia(3);
-  //oraz ta sama cyfra jest wysylana jako zmienna TX w roli potwierdzenia np (adres wy) 1103 
-  
+
   rcv_data();
   //Serial.print(" infinity ");
   //ulatwia synchronizowanie odbiornika po zaniku sygnalu
