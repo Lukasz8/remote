@@ -19,9 +19,9 @@ RF22 rf22;
 
 //zmienne
 int net_addr = 0;
-int czestotliwosc = 0;
+//int czestotliwosc = 0;
 int wejscie_pomiarowe_adresu = A0;    //pomiar na dzielniku napiecia
-int wejscie_pomiarowe_czestotliwosci = A1; //pomiar na dzielniku napiecia
+//int wejscie_pomiarowe_czestotliwosci = A1; //pomiar na dzielniku napiecia
 unsigned long time_to_gaszenie = 0;   //pomocnicza do wygaszania wejść
 int bcd_E1 = 5;
 int bcd_A0 = 6;
@@ -376,5 +376,4 @@ void loop(){
   
   rcv_data();
   gaszenie_wyjsc();
-  //Serial.print(" infinity ")
 }
