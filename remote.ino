@@ -3,11 +3,11 @@ SP8XCE & SQ9MDD
 REMOTE odbior, potwierdzenie odbioru + obsluga dekodera BCD 5 pinow
 
 CHANGELOG nowe na górze
+ 2015.11.29 - SP8XCE skalibrowanie dipswitchy
  2015.11.29 - SQ9MDD v.1.4 dodanie funkcji do obsługi dipswitch adresy
  2015.11.29 - SQ9MDD dodałem gaszenie wyjść 5sec po ostatnim wysterowaniu
- 2015.11.29 - uruchomienie sterowania diodami podpietymi do wyjscia dekodera BCD  
+ 2015.11.29 - SP8XCE uruchomienie sterowania diodami podpietymi do wyjscia dekodera BCD  
  2015.11.26 - dodanie konfiguracji adresu (programowo), dodanie reakcji na adres
-
 */
 #define ver 1.4
 
@@ -19,7 +19,9 @@ RF22 rf22;
 
 //zmienne
 int net_addr = 0;
-int wejscie_pomiarowe_adresu = A0;
+int czestotliwosc = 0;
+int wejscie_pomiarowe_adresu = A0;    //pomiar na dzielniku napiecia
+int wejscie_pomiarowe_czestotliwosci = A1; //pomiar na dzielniku napiecia
 unsigned long time_to_gaszenie = 0;   //pomocnicza do wygaszania wejść
 int bcd_E1 = 5;
 int bcd_A0 = 6;
@@ -34,24 +36,47 @@ int set_addres(){
   int addres = 0;
   int pomiar = analogRead(wejscie_pomiarowe_adresu);
   //Serial.println(pomiar); //odkomentuj do kalibracji
-  if(pomiar <= 5) addres = 0;
-  if(pomiar >= 10 && pomiar <= 30) addres = 1; 
-  if(pomiar >= 30 && pomiar <= 46) addres = 2; 
-  if(pomiar >= 47 && pomiar <= 66) addres = 3;
-  if(pomiar >= 67 && pomiar <= 88) addres = 4; 
-  if(pomiar >= 87 && pomiar <= 105) addres = 5; 
-  if(pomiar >= 106 && pomiar <= 115) addres = 6; 
-  if(pomiar >= 116 && pomiar <= 131) addres = 7; 
-  if(pomiar >= 132 && pomiar <= 150) addres = 8; 
-  if(pomiar >= 151 && pomiar <= 160) addres = 9; 
-  if(pomiar >= 161 && pomiar <= 175) addres = 10; 
-  if(pomiar >= 176 && pomiar <= 190) addres = 11; 
-  if(pomiar >= 191 && pomiar <= 205) addres = 12; 
-  if(pomiar >= 206 && pomiar <= 220) addres = 13; 
-  if(pomiar >= 221 && pomiar <= 230) addres = 14; 
-  if(pomiar >= 231 && pomiar <= 241) addres = 15; 
+  if(pomiar <= 0) addres = 0;
+  if(pomiar >= 30 && pomiar <= 90) addres = 1; 
+  if(pomiar >= 90 && pomiar <= 120) addres = 2; 
+  if(pomiar >= 120 && pomiar <= 160) addres = 3;
+  if(pomiar >= 160 && pomiar <= 190) addres = 4; 
+  if(pomiar >= 190 && pomiar <= 235) addres = 5; 
+  if(pomiar >= 235 && pomiar <= 270) addres = 6; 
+  if(pomiar >= 270 && pomiar <= 300) addres = 7; 
+  if(pomiar >= 300 && pomiar <= 330) addres = 8; 
+  if(pomiar >= 330 && pomiar <= 355) addres = 9; 
+  if(pomiar >= 355 && pomiar <= 380) addres = 10; 
+  if(pomiar >= 380 && pomiar <= 400) addres = 11; 
+  if(pomiar >= 400 && pomiar <= 415) addres = 12; 
+  if(pomiar >= 415 && pomiar <= 435) addres = 13; 
+  if(pomiar >= 435 && pomiar <= 455) addres = 14; 
+  if(pomiar >= 455 && pomiar <= 480) addres = 15; 
   return(addres+10); 
 }
+/*ustawienie czestotliowosci
+int set_czestotliwosc(){
+  int czestotliwosc = 0;
+  int pomiar1 = analogRead(wejscie_pomiarowe_adresu_1);
+  if(pomiar1 <= 0) czestotliwosc = 0;
+  if(pomiar1 >= 30 && pomiar1 <= 90) czestotliwosc = 1; 
+  if(pomiar1 >= 90 && pomiar1 <= 120) czestotliwosc = 2; 
+  if(pomiar1 >= 120 && pomiar1 <= 160) czestotliwosc = 3;
+  if(pomiar1 >= 160 && pomiar1 <= 190) czestotliwosc = 4; 
+  if(pomiar1 >= 190 && pomiar1 <= 235) czestotliwosc = 5; 
+  if(pomiar1 >= 235 && pomiar1 <= 270) czestotliwosc = 6; 
+  if(pomiar1 >= 270 && pomiar1 <= 300) czestotliwosc = 7; 
+  if(pomiar1 >= 300 && pomiar1 <= 330) czestotliwosc = 8; 
+  if(pomiar1 >= 330 && pomiar1 <= 355) czestotliwosc = 9; 
+  if(pomiar1 >= 355 && pomiar1 <= 380) czestotliwosc = 10; 
+  if(pomiar1 >= 380 && pomiar1 <= 400) czestotliwosc = 11; 
+  if(pomiar1 >= 400 && pomiar1 <= 415) czestotliwosc = 12; 
+  if(pomiar1 >= 415 && pomiar1 <= 435) czestotliwosc = 13; 
+  if(pomiar1 >= 435 && pomiar1 <= 455) czestotliwosc = 14; 
+  if(pomiar1 >= 455 && pomiar1 <= 480) czestotliwosc = 15; 
+  return(czestotliwosc+10); 
+}
+*/
 
 //odbieranie danych
 void rcv_data(){
@@ -187,9 +212,9 @@ void rcv_data(){
    }
 }
 
-void odpalanie_wyjscia(int wejscie){
+void odpalanie_wyjscia(int wyjscie){
   //sterowanie BCD
-  switch(wejscie){
+  switch(wyjscie){
      case 1:
         digitalWrite(bcd_E1,HIGH);
         digitalWrite(bcd_A0,LOW);
@@ -320,7 +345,7 @@ void gaszenie_wyjsc(){
 //startup sequence
 void setup(){
   Serial.begin(9600);
-  net_addr = set_addres();
+  
   pinMode(bcd_E1,OUTPUT);  
   pinMode(bcd_A0,OUTPUT);
   pinMode(bcd_A1,OUTPUT);
@@ -331,6 +356,8 @@ void setup(){
   digitalWrite(bcd_A1,LOW);
   digitalWrite(bcd_A2,LOW);
   digitalWrite(bcd_A3,LOW);
+  //ustawianie adresu
+  net_addr = set_addres();
   
   if (!rf22.init()){
     Serial.println("RF22 init failed");
@@ -343,12 +370,11 @@ void setup(){
 //infinity loop
 void loop(){
   //aby skalibrować drabinke z adresem odkomentuj i czytaj wartości
-  net_addr = set_addres();
+  //net_addr = set_addres();
+  //delay(1000);
+  //tylko do kalibracji
   
-  //tutaj wysylka danych przez radio
   rcv_data();
   gaszenie_wyjsc();
-  //Serial.print(" infinity ");
-  //ulatwia synchronizowanie odbiornika po zaniku sygnalu
-  //delay(100); 
+  //Serial.print(" infinity ")
 }
