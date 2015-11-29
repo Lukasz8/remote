@@ -2,10 +2,13 @@
 SP8XCE & SQ9MDD
 REMOTE odbior, potwierdzenie odbioru + obsluga dekodera BCD 5 pinow
 
-CHANGELOG
+CHANGELOG nowe na górze
+ 2015.11.29 - SQ9MDD dodałem gaszenie wyjść 5sec po ostatnim wysterowaniu
+ 2015.11.29 - uruchomienie sterowania diodami podpietymi do wyjscia dekodera BCD  
  2015.11.26 - dodanie konfiguracji adresu (programowo), dodanie reakcji na adres
- 2015.11.29 - uruchomienie sterowania diodami podpietymi do wyjscia dekodera BCD
+
 */
+#define ver 1.3
 
 #include <SPI.h>
 #include <RF22.h>
@@ -15,6 +18,7 @@ RF22 rf22;
 
 //zmienne
 int net_addr = 11;
+unsigned long time_to_gaszenie = 0;   //pomocnicza do wygaszania wejść
 int bcd_E1 = 5;
 int bcd_A0 = 6;
 int bcd_A1 = 7;
@@ -200,6 +204,18 @@ void odpalanie_wyjscia(int wejscie){
         digitalWrite(bcd_A3,HIGH);
      break;
   }
+  //a tutaj ustalamy czas gaszenia wyjsc
+  time_to_gaszenie = millis() + 5000;
+}
+
+void gaszenie_wyjsc(){
+  if(millis() >= time_to_gaszenie){
+        digitalWrite(bcd_E1,LOW);
+        digitalWrite(bcd_A0,LOW);
+        digitalWrite(bcd_A1,LOW);
+        digitalWrite(bcd_A2,LOW);
+        digitalWrite(bcd_A3,LOW); 
+  } 
 }
 
 //startup sequence
@@ -230,6 +246,7 @@ void loop(){
   //tutaj wysylka danych przez radio
 
   rcv_data();
+  gaszenie_wyjsc();
   //Serial.print(" infinity ");
   //ulatwia synchronizowanie odbiornika po zaniku sygnalu
   //delay(100); 
