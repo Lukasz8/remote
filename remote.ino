@@ -151,6 +151,9 @@ void rcv_data(){
       //debugowanie printujemy wszystko co odbieramy
       Serial.print("mamy odpowiedz: ");
       Serial.println(RX);
+      //odsyłamy potwierdzenie do nadawcy
+      rf22.send((uint8_t*)&RX, sizeof(RX));
+      rf22.waitPacketSent();      
       }
       }
    }
