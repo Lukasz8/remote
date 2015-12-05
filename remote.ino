@@ -3,6 +3,7 @@ SP8XCE & SQ9MDD
 REMOTE odbior, potwierdzenie odbioru + obsluga dekodera BCD 5 pinow
 
 CHANGELOG nowe na górze
+ 2015.12.05 - SP8XCE skrocenie czasu gasenia wyjsc do 0,5 sekundy
  2015.11.29 - SP8XCE skalibrowanie dipswitchy
  2015.11.29 - SQ9MDD v.1.4 dodanie funkcji do obsługi dipswitch adresy
  2015.11.29 - SQ9MDD dodałem gaszenie wyjść 5sec po ostatnim wysterowaniu
@@ -329,7 +330,7 @@ void odpalanie_wyjscia(int wyjscie){
      break;
   }
   //a tutaj ustalamy czas gaszenia wyjsc
-  time_to_gaszenie = millis() + 5000;
+  time_to_gaszenie = millis() + 500;
 }
 
 void gaszenie_wyjsc(){
