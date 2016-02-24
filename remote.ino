@@ -29,6 +29,10 @@ int bcd_A0 = 6;
 int bcd_A1 = 7;
 int bcd_A2 = 8;
 int bcd_A3 = 9;
+int led_act = 4;
+int led_state = 0;
+
+unsigned long time_to_change_led = 0;
 
 //funkcje
 
@@ -456,7 +460,7 @@ void gaszenie_wyjsc(){
 //startup sequence
 void setup(){
   Serial.begin(9600);
-  
+  pinMode(led_act,OUTPUT);
   pinMode(bcd_E1,OUTPUT);  
   pinMode(bcd_A0,OUTPUT);
   pinMode(bcd_A1,OUTPUT);
@@ -487,4 +491,15 @@ void loop(){
   
   rcv_data();
   gaszenie_wyjsc();
+
+    if(millis() >= time_to_change_led){
+      if(led_state == 0){
+          led_state = 1;
+          digitalWrite(led_act,HIGH);
+      }else{
+          led_state = 0;
+          digitalWrite(led_act,LOW);        
+    }
+    time_to_change_led = millis() + 1000;
+  }
 }
