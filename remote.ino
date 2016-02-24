@@ -209,8 +209,13 @@ void rcv_data(){
       rf22.send((uint8_t*)&RX, sizeof(RX));
       rf22.waitPacketSent();      
       }
-      if(net_addr == 99){
-          switch(adres_wyjscia){
+      if(net_addr = 99){
+      //wyciagam adres wyjścia
+        int adres_wyjscia = reszta / 10;
+        //wyciagam polecenie 1 - ON, 0 - OFF
+        int polecenie = reszta % 10; 
+          //jak już mam adres wyjscia to moge nimi sterowac        
+        switch(adres_wyjscia){
             case 10: // sprawdzenie czy zyje odbiornik
               Serial.println("sprawdzenie czy odbiornik zyje");
             break;
@@ -310,12 +315,12 @@ void rcv_data(){
                 odpalanie_wyjscia(16);
               }
             break;
-          }
-      }
-      }
+          }        
       }
    }
 }
+}
+
 
 void odpalanie_wyjscia(int wyjscie){
   //sterowanie BCD
@@ -436,6 +441,7 @@ void odpalanie_wyjscia(int wyjscie){
   //a tutaj ustalamy czas gaszenia wyjsc
   time_to_gaszenie = millis() + 500;
 }
+
 
 void gaszenie_wyjsc(){
   if(millis() >= time_to_gaszenie){
