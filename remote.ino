@@ -215,7 +215,7 @@ void rcv_data(){
       rf22.send((uint8_t*)&RX, sizeof(RX));
       rf22.waitPacketSent();      
       }
-      if(net_addr = 30){
+      if(net_addr = 26){
       //wyciagam adres wyjścia
         int adres_wyjscia = reszta / 10;
         //wyciagam polecenie 1 - ON, 0 - OFF
