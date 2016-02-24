@@ -3,6 +3,8 @@ SP8XCE & SQ9MDD
 REMOTE odbior, potwierdzenie odbioru + obsluga dekodera BCD 5 pinow
 
 CHANGELOG nowe na górze
+ 2016.02.24 - SQ9MDD adres 30 uruchamia grupe wszystkich adresow 10-26 bez wysylki potwierdzen
+ 2016.02.24 - SQ9MDD mrugajaca dioda na wyjsciu D4
  2015.12.05 - SP8XCE skrocenie czasu gasenia wyjsc do 0,5 sekundy
  2015.11.29 - SP8XCE skalibrowanie dipswitchy
  2015.11.29 - SQ9MDD v.1.4 dodanie funkcji do obsługi dipswitch adresy
